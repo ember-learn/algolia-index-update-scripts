@@ -4,6 +4,7 @@
   "description": "This project reindexes algolia with the latest API documentation.",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": ""
   },
   "repository": {
@@ -19,6 +20,7 @@
   "dependencies": {
     "algoliasearch": "^3.24.5",
     "chalk": "^2.2.0",
+    "dotenv": "^4.0.0",
     "request": "^2.83.0",
     "request-promise": "^4.2.2"
   }
