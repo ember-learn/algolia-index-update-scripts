@@ -1,0 +1,25 @@
+{
+  "name": "algolia-index-update-scripts",
+  "version": "0.1.0",
+  "description": "This project reindexes algolia with the latest API documentation.",
+  "main": "index.js",
+  "scripts": {
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ember-learn/algolia-index-update-scripts.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ember-learn/algolia-index-update-scripts/issues"
+  },
+  "homepage": "https://github.com/ember-learn/algolia-index-update-scripts#readme",
+  "dependencies": {
+    "algoliasearch": "^3.24.5",
+    "chalk": "^2.2.0",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2"
+  }
+}
