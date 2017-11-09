@@ -14,7 +14,9 @@ module.exports = {
                 exclude: /(node_modules|bower_components)/,
                 use: {
                     loader: 'babel-loader',
-                    options: {}
+                    options: {
+                        plugins: [require('babel-plugin-transform-object-rest-spread')]
+                    }
                 }
             },
             { test: /\.json$/, loader: 'json-loader' }
