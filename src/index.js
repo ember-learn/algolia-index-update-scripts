@@ -33,7 +33,7 @@ readTmpFileAsync('rev-index/ember.json')
             const id = encodeURIComponent(module.id);
             const modulePath = `json-docs/ember/${version.data.attributes.version}/modules/${version.meta.module[id]}.json`;
 
-            logger.logBlue(`OPENNING:: ${modulePath}`);
+            logger.logBlue(`OPENING:: ${modulePath}`);
             return readTmpFile(modulePath);
         });
 
@@ -43,7 +43,7 @@ readTmpFileAsync('rev-index/ember.json')
             const id = encodeURIComponent(classObj.id);
             const classPath = `json-docs/ember/${version.data.attributes.version}/classes/${version.meta.class[id]}.json`;
 
-            logger.logBlue(`OPENNING:: ${classPath}`);
+            logger.logBlue(`OPENING:: ${classPath}`);
             return readTmpFile(classPath);
         });
 
