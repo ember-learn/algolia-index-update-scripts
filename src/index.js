@@ -55,10 +55,12 @@ readTmpFileAsync('rev-index/ember.json')
 })
 // Run the schema against all data stored
 .map(versionObject => {
+    const staticFunctions = extractStaticFunctionsFromModules(versionObject.publicModules);
+    const methods = extractMethodsFromClasses(versionObject.publicClasses);
+
     return {
         ...versionObject,
-
-        methods: extractMethodsFromClasses(versionObject.publicClasses),
+        methods: [...methods, ...staticFunctions],
         publicModules: versionObject.publicModules.map(schemas.moduleSchema),
         publicClasses: versionObject.publicClasses.map(schemas.classSchema)
     };
@@ -90,6 +92,28 @@ function extractMethodsFromClasses(classes) {
                 return classMethods;
             }, [])
             // Merge all methods of all classes into a single array
+            .concat(methods);
+    }, []);
+}
+
+function extractStaticFunctionsFromModules(modules) {
+    return modules.reduce((methods, currentModule) => {
+        const moduleName = currentModule.name;
+        const staticfunctionsObj = currentModule.data.attributes.staticfunctions;
+
+        // Guard against staticfunctions not existing.
+        if(!staticfunctionsObj) return methods;
+        // Extract all the static functions from inside their sub-modules
+        const moduleStaticFunctions = Object.keys(staticfunctionsObj)
+            .reduce((prevStaticFunctions, currModuleName) => {
+                return prevStaticFunctions.concat(staticfunctionsObj[currModuleName]);
+            }, []);
+
+        return moduleStaticFunctions
+            .reduce((moduleStaticFunctions, currentStaticFunction) => {
+                moduleStaticFunctions.push(schemas.methodSchema(currentStaticFunction));
+                return moduleStaticFunctions;
+            }, [])
             .concat(methods);
     }, []);
 }
