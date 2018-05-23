@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+import Bluebird from 'bluebird';
 import logger from 'src/utils/logger';
 import drivers from 'src/drivers';
 import { readTmpFile, readTmpFileAsync } from 'src/utils/fs';
@@ -9,6 +10,7 @@ const {
     DRIVER,
     DEBUG
 } = process.env;
+
 
 // Initialise driver
 drivers[DRIVER].init('modules');
@@ -103,9 +105,12 @@ function mapDataForVersion(versionObject) {
 function writeToDriver(versionObject) {
     logger.logGreen(`version: ${versionObject.version.data.id}, public classes: ${versionObject.publicClasses.length}, public modules: ${versionObject.publicModules.length}, methods: ${versionObject.methods.length}`);
 
-    drivers[DRIVER].write('modules', versionObject.publicModules);
-    drivers[DRIVER].write('classes', versionObject.publicClasses);
-    drivers[DRIVER].write('methods', versionObject.methods);
+    // Wait for all promises to complete before continuing
+    return Bluebird.all([
+        drivers[DRIVER].write('modules', versionObject.publicModules),
+        drivers[DRIVER].write('classes', versionObject.publicClasses),
+        drivers[DRIVER].write('methods', versionObject.methods)
+    ]);
 }
 
 // Handle errors
