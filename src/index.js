@@ -11,11 +11,12 @@ const {
     DEBUG
 } = process.env;
 
+const SelectedDriver = drivers[DRIVER];
 
 // Initialise driver
-drivers[DRIVER].init('modules');
-drivers[DRIVER].init('classes');
-drivers[DRIVER].init('methods');
+SelectedDriver.init('modules');
+SelectedDriver.init('classes');
+SelectedDriver.init('methods');
 
 // Load ember.json which includes all available ember versions.
 readTmpFileAsync('rev-index/ember.json')
@@ -107,9 +108,9 @@ function writeToDriver(versionObject) {
 
     // Wait for all promises to complete before continuing
     return Bluebird.all([
-        drivers[DRIVER].write('modules', versionObject.publicModules),
-        drivers[DRIVER].write('classes', versionObject.publicClasses),
-        drivers[DRIVER].write('methods', versionObject.methods)
+        SelectedDriver.write('modules', versionObject.publicModules),
+        SelectedDriver.write('classes', versionObject.publicClasses),
+        SelectedDriver.write('methods', versionObject.methods)
     ]);
 }
 
