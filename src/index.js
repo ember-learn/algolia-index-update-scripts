@@ -20,41 +20,70 @@ readTmpFileAsync('rev-index/ember.json')
 // Extract available versions
 .then(emberJson => emberJson.meta.availableVersions)
 // Grab the json file of each ember version
-.map(version => {
+.map(readIndexFileForVersion)
+// Fetch all public modules and public classes
+.map(fetchPublicModuleClassesForVersion)
+// Run the schema against all data stored
+.map(mapDataForVersion)
+// Write out to selected driver.
+.map(writeToDriver)
+// Handle script error
+.catch(errorHandler);
+
+
+/**
+ * Read index file for version
+ *
+ * @param {string}          version
+ * @returns {Promise}       - Returns found index file json
+ */
+function readIndexFileForVersion(version) {
     const emberVersionJSONPath = `rev-index/ember-${version}.json`;
     logger.logBlue(`OPENING:: ${emberVersionJSONPath}`);
     return readTmpFile(emberVersionJSONPath);
-})
-// Fetch all public modules and public classes
-.map(version => {
-    const publicModules = version.data.relationships['public-modules'].data
-        .map(module => {
-            // Module names are uri encoded
-            const id = encodeURIComponent(module.id);
-            const modulePath = `json-docs/ember/${version.data.attributes.version}/modules/${version.meta.module[id]}.json`;
+}
 
-            logger.logBlue(`OPENING:: ${modulePath}`);
-            return readTmpFile(modulePath);
-        });
+/**
+ * Fetch public modules and classes for version
+ *
+ * @param {object} versionIndexObject        - The index.json file for a given version
+ * @returns {object}                        - Extended version object with public modules & classes
+ */
+function fetchPublicModuleClassesForVersion(versionIndexObject) {
+    const publicModules = versionIndexObject.data.relationships['public-modules'].data
+    .map(module => {
+        // Module names are uri encoded
+        const id = encodeURIComponent(module.id);
+        const modulePath = `json-docs/ember/${versionIndexObject.data.attributes.version}/modules/${versionIndexObject.meta.module[id]}.json`;
 
-    const publicClasses = version.data.relationships['public-classes'].data
-        .map(classObj => {
-            // Class names are uri encoded
-            const id = encodeURIComponent(classObj.id);
-            const classPath = `json-docs/ember/${version.data.attributes.version}/classes/${version.meta.class[id]}.json`;
+        logger.logBlue(`OPENING:: ${modulePath}`);
+        return readTmpFile(modulePath);
+    });
 
-            logger.logBlue(`OPENING:: ${classPath}`);
-            return readTmpFile(classPath);
-        });
+    const publicClasses = versionIndexObject.data.relationships['public-classes'].data
+    .map(classObj => {
+        // Class names are uri encoded
+        const id = encodeURIComponent(classObj.id);
+        const classPath = `json-docs/ember/${versionIndexObject.data.attributes.version}/classes/${versionIndexObject.meta.class[id]}.json`;
+
+        logger.logBlue(`OPENING:: ${classPath}`);
+        return readTmpFile(classPath);
+    });
 
     return {
-        version,
+        version: versionIndexObject,
         publicModules,
         publicClasses
     };
-})
-// Run the schema against all data stored
-.map(versionObject => {
+}
+
+/**
+ * Map the data for version
+ *
+ * @param {object} versionObject    - The version object to map
+ * @returns {object}                - Extended version object with methods & mapped schemas
+ */
+function mapDataForVersion(versionObject) {
     const staticFunctions = extractStaticFunctionsFromModules(versionObject.publicModules);
     const methods = extractMethodsFromClasses(versionObject.publicClasses);
 
@@ -64,18 +93,25 @@ readTmpFileAsync('rev-index/ember.json')
         publicModules: versionObject.publicModules.map(schemas.moduleSchema),
         publicClasses: versionObject.publicClasses.map(schemas.classSchema)
     };
-})
-// Write out to selected driver.
-.map(versionObject => {
+}
+
+/**
+ * Writes out to the given driver
+ *
+ * @param versionObject         - Object version to write out
+ */
+function writeToDriver(versionObject) {
     logger.logGreen(`version: ${versionObject.version.data.id}, public classes: ${versionObject.publicClasses.length}, public modules: ${versionObject.publicModules.length}, methods: ${versionObject.methods.length}`);
 
     drivers[DRIVER].write('modules', versionObject.publicModules);
     drivers[DRIVER].write('classes', versionObject.publicClasses);
     drivers[DRIVER].write('methods', versionObject.methods);
-})
-.catch(err => {
-    console.log('Error::', err);
-});
+}
+
+// Handle errors
+function errorHandler(err) {
+    console.log('Error:: ', err);
+}
 
 /**
  * Takes an array of classes, extracts the methods from each one,
