@@ -22,6 +22,8 @@ SelectedDriver.init('methods');
 readTmpFileAsync('rev-index/ember.json')
 // Extract available versions
 .then(emberJson => emberJson.meta.availableVersions)
+// Clear the driver contents
+.tap(clearDriver)
 // Grab the json file of each ember version
 .map(readIndexFileForVersion)
 // Fetch all public modules and public classes
@@ -111,6 +113,19 @@ function writeToDriver(versionObject) {
         SelectedDriver.write('modules', versionObject.publicModules),
         SelectedDriver.write('classes', versionObject.publicClasses),
         SelectedDriver.write('methods', versionObject.methods)
+    ]);
+}
+
+/**
+ * Clears the driver indices
+ *
+ * @returns {Promise}       - Promise with all drivers cleared.
+ */
+function clearDriver() {
+    return Bluebird.all([
+        SelectedDriver.clear('modules'),
+        SelectedDriver.clear('classes'),
+        SelectedDriver.clear('methods')
     ]);
 }
 
