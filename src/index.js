@@ -20,32 +20,53 @@ SelectedDriver.init('methods');
 
 // Load ember.json which includes all available ember versions.
 readTmpFileAsync('rev-index/ember.json')
-// Extract available versions
-.then(emberJson => emberJson.meta.availableVersions)
-// Clear the driver contents
-.tap(clearDriver)
-// Grab the json file of each ember version
-.map(readIndexFileForVersion)
-// Fetch all public modules and public classes
-.map(fetchPublicModuleClassesForVersion)
-// Run the schema against all data stored
-.map(mapDataForVersion)
-// Write out to selected driver.
-.map(writeToDriver)
-// Handle script error
-.catch(errorHandler);
+  // Extract available versions
+  .then(emberJson => emberJson.meta.availableVersions)
+  // Clear the driver contents
+  .tap(clearDriver)
+  // Grab the json file of each ember version
+  .map(readEmberIndexFileForVersion)
+  // Fetch all public modules and public classes
+  .map(fetchPublicModuleClassesForEmberVersion)
+  // Run the schema against all data stored
+  .map(mapDataForVersion)
+  // Write out to selected driver.
+  .map(writeToDriver)
+  // Handle script error
+  .then(() => readTmpFileAsync('rev-index/ember-data.json'))
+  .then(emberJson => emberJson.meta.availableVersions)
+  .map(readEmberDataIndexFileForVersion)
+  .map(fetchPublicModuleClassesForEmberDataVersion)
+  .map(mapDataForVersion)
+  .map(writeToDriver)
+  .catch(errorHandler)
 
 
+function readEmberIndexFileForVersion(version) {
+  return readIndexFileForVersion(version, 'ember');
+}
+
+function readEmberDataIndexFileForVersion(version) {
+  return readIndexFileForVersion(version, 'ember-data');
+}
 /**
  * Read index file for version
  *
  * @param {string}          version
  * @returns {Promise}       - Returns found index file json
  */
-function readIndexFileForVersion(version) {
-    const emberVersionJSONPath = `rev-index/ember-${version}.json`;
+function readIndexFileForVersion(version, libName) {
+    const emberVersionJSONPath = `rev-index/${libName}-${version}.json`;
     logger.logBlue(`OPENING:: ${emberVersionJSONPath}`);
     return readTmpFile(emberVersionJSONPath);
+}
+
+function fetchPublicModuleClassesForEmberVersion(versionIndexObject) {
+  return fetchPublicModuleClassesForVersion(versionIndexObject, 'ember');
+}
+
+function fetchPublicModuleClassesForEmberDataVersion(versionIndexObject) {
+  return fetchPublicModuleClassesForVersion(versionIndexObject, 'ember-data');
 }
 
 /**
@@ -54,12 +75,12 @@ function readIndexFileForVersion(version) {
  * @param {object} versionIndexObject        - The index.json file for a given version
  * @returns {object}                        - Extended version object with public modules & classes
  */
-function fetchPublicModuleClassesForVersion(versionIndexObject) {
+function fetchPublicModuleClassesForVersion(versionIndexObject, libName) {
     const publicModules = versionIndexObject.data.relationships['public-modules'].data
     .map(module => {
         // Module names are uri encoded
         const id = encodeURIComponent(module.id);
-        const modulePath = `json-docs/ember/${versionIndexObject.data.attributes.version}/modules/${versionIndexObject.meta.module[id]}.json`;
+        const modulePath = `json-docs/${libName}/${versionIndexObject.data.attributes.version}/modules/${versionIndexObject.meta.module[id]}.json`;
 
         logger.logBlue(`OPENING:: ${modulePath}`);
         return readTmpFile(modulePath);
@@ -69,7 +90,7 @@ function fetchPublicModuleClassesForVersion(versionIndexObject) {
     .map(classObj => {
         // Class names are uri encoded
         const id = encodeURIComponent(classObj.id);
-        const classPath = `json-docs/ember/${versionIndexObject.data.attributes.version}/classes/${versionIndexObject.meta.class[id]}.json`;
+        const classPath = `json-docs/${libName}/${versionIndexObject.data.attributes.version}/classes/${versionIndexObject.meta.class[id]}.json`;
 
         logger.logBlue(`OPENING:: ${classPath}`);
         return readTmpFile(classPath);
