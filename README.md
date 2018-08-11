@@ -6,7 +6,7 @@
 
 1. `cp .env.example .env` - Copy the example environment configuration
 2. Update the Algolia .env variables and path to the root of the generated API docs
-3. `yarn` - Install dependencies
+3. `yarn install` - Install dependencies
 
 ### Indexing API
 
