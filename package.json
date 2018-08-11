@@ -4,7 +4,7 @@
   "description": "This project reindexes algolia with the latest API documentation.",
   "main": "index.js",
   "scripts": {
-    "seed": "node ./dist/main.js",
+    "seed:api": "node ./build/api.js",
     "build": "webpack",
     "start": "yarn run build && yarn run seed",
     "test": ""
