@@ -6,10 +6,7 @@ import drivers from 'src/drivers';
 import { readTmpFile, readTmpFileAsync } from 'src/utils/fs';
 import schemas from './schemas';
 
-const {
-    DRIVER,
-    DEBUG
-} = process.env;
+const { DRIVER } = process.env;
 
 const SelectedDriver = drivers[DRIVER];
 
@@ -32,14 +29,15 @@ readTmpFileAsync('rev-index/ember.json')
   .map(mapDataForVersion)
   // Write out to selected driver.
   .map(writeToDriver)
-  // Handle script error
+  // Load ember-data.json which includes all available ember-data versions
   .then(() => readTmpFileAsync('rev-index/ember-data.json'))
   .then(emberJson => emberJson.meta.availableVersions)
   .map(readEmberDataIndexFileForVersion)
   .map(fetchPublicModuleClassesForEmberDataVersion)
   .map(mapDataForVersion)
   .map(writeToDriver)
-  .catch(errorHandler)
+  // Handle script error
+  .catch(errorHandler);
 
 
 function readEmberIndexFileForVersion(version) {
@@ -52,7 +50,8 @@ function readEmberDataIndexFileForVersion(version) {
 /**
  * Read index file for version
  *
- * @param {string}          version
+ * @param {string}          version     - Version of library to index
+ * @param {string}          libName     - Name of library currently indexing
  * @returns {Promise}       - Returns found index file json
  */
 function readIndexFileForVersion(version, libName) {
@@ -73,6 +72,7 @@ function fetchPublicModuleClassesForEmberDataVersion(versionIndexObject) {
  * Fetch public modules and classes for version
  *
  * @param {object} versionIndexObject        - The index.json file for a given version
+ * @param {string} libName                  - The name of the library to index
  * @returns {object}                        - Extended version object with public modules & classes
  */
 function fetchPublicModuleClassesForVersion(versionIndexObject, libName) {
@@ -176,7 +176,6 @@ function extractMethodsFromClasses(classes) {
 
 function extractStaticFunctionsFromModules(modules) {
     return modules.reduce((methods, currentModule) => {
-        const moduleName = currentModule.name;
         const staticfunctionsObj = currentModule.data.attributes.staticfunctions;
 
         // Guard against staticfunctions not existing.
