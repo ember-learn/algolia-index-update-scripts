@@ -3,42 +3,49 @@ require('dotenv').config();
 import Bluebird from 'bluebird';
 import logger from 'src/utils/logger';
 import drivers from 'src/drivers';
-import { readTmpFile, readTmpFileAsync } from 'src/utils/fs';
+import { readTmpFileFactory, readTmpFileAsyncFactory } from 'src/utils/fs';
 import schemas from './schemas';
+
+// Get 'readTmpFile' and 'readTmpFileAsync' bound by 'api'
+const PROJECT_TYPE = 'api';
+const readTmpFile = readTmpFileFactory(PROJECT_TYPE);
+const readTmpFileAsync = readTmpFileAsyncFactory(PROJECT_TYPE);
 
 const { DRIVER } = process.env;
 
 const SelectedDriver = drivers[DRIVER];
 
-// Initialise driver
-SelectedDriver.init('modules');
-SelectedDriver.init('classes');
-SelectedDriver.init('methods');
+export function run() {
+    // Initialise drivers
+    SelectedDriver.init('modules');
+    SelectedDriver.init('classes');
+    SelectedDriver.init('methods');
 
-// Load ember.json which includes all available ember versions.
-readTmpFileAsync('rev-index/ember.json')
-  // Extract available versions
-  .then(emberJson => emberJson.meta.availableVersions)
-  // Clear the driver contents
-  .tap(clearDriver)
-  // Grab the json file of each ember version
-  .map(readEmberIndexFileForVersion)
-  // Fetch all public modules and public classes
-  .map(fetchPublicModuleClassesForEmberVersion)
-  // Run the schema against all data stored
-  .map(mapDataForVersion)
-  // Write out to selected driver.
-  .map(writeToDriver)
-  // Load ember-data.json which includes all available ember-data versions
-  .then(() => readTmpFileAsync('rev-index/ember-data.json'))
-  .then(emberJson => emberJson.meta.availableVersions)
-  .map(readEmberDataIndexFileForVersion)
-  .map(fetchPublicModuleClassesForEmberDataVersion)
-  .map(mapDataForVersion)
-  .map(writeToDriver)
-  // Handle script error
-  .catch(errorHandler);
+    // Load ember.json which includes all available ember versions.
+    return readTmpFileAsync('rev-index/ember.json')
+        // Extract available versions
+        .then(emberJson => emberJson.meta.availableVersions)
+        // Clear the driver contents
+        .tap(clearDriver)
+        // Grab the json file of each ember version
+        .map(readEmberIndexFileForVersion)
+        // Fetch all public modules and public classes
+        .map(fetchPublicModuleClassesForEmberVersion)
+        // Run the schema against all data stored
+        .map(mapDataForVersion)
+        // Write out to selected driver.
+        .map(writeToDriver)
+        // Load ember-data.json which includes all available ember-data versions
+        .then(() => readTmpFileAsync('rev-index/ember-data.json'))
+        .then(emberJson => emberJson.meta.availableVersions)
+        .map(readEmberDataIndexFileForVersion)
+        .map(fetchPublicModuleClassesForEmberDataVersion)
+        .map(mapDataForVersion)
+        .map(writeToDriver)
+        // Handle script error
+        .catch(errorHandler);
 
+}
 
 function readEmberIndexFileForVersion(version) {
   return readIndexFileForVersion(version, 'ember');
