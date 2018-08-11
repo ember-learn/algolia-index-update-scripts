@@ -1,12 +1,12 @@
 {
   "name": "algolia-index-update-scripts",
-  "version": "0.1.0",
-  "description": "This project reindexes algolia with the latest API documentation.",
+  "version": "1.0.0",
+  "description": "This project reindexes algolia with the latest API & Guides documentation.",
   "main": "index.js",
   "scripts": {
-    "seed:api": "node ./build/api.js",
     "build": "webpack",
-    "start": "yarn run build && yarn run seed",
+    "cli": "node ./build/index.js",
+    "start": "yarn run build && yarn run cli",
     "test": ""
   },
   "repository": {
@@ -24,6 +24,7 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "bluebird": "^3.5.1",
     "chalk": "^2.2.0",
+    "commander": "^2.17.1",
     "dotenv": "^4.0.0",
     "file-system": "^2.2.2",
     "json-loader": "^0.5.7",

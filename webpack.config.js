@@ -2,7 +2,9 @@ const path = require('path');
 
 module.exports = {
     entry: {
-        api: './src/api.js'
+        index: './src/index.js',
+        api: './src/api.js',
+        guides: './src/guides.js'
     },
     output: {
         path: path.resolve(__dirname, 'build'),
