@@ -21,7 +21,7 @@ Guides json files are currently not stored somewhere, because they are built on 
 To Generate the JSON files locally, clone [guides-app](https://github.com/ember-learn/guides-app), and run `ember build`.
 
 Once generated, use the following command to reindex algolia:
-`yarn start -p api`
+`yarn start -p guides`
 
 
 ## .env variables
