@@ -3,3 +3,6 @@ node_modules
 build
 drivers-output
 dist
+yarn-error.log
+tmp
+.vscode

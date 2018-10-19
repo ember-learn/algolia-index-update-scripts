@@ -9,6 +9,10 @@ program
   .version(version, '-v, --version')
   .description(description)
   .option('-p, --project <project>', 'Project name. Accepts "api" or "guides"')
+  .option(
+    '-c, --clear-index',
+    'Whether indexes of the project should be cleared while processing'
+  )
 
 program.on('--help', function() {
   console.log(`
@@ -25,7 +29,7 @@ switch (program.project) {
     runGuides()
     break
   case 'api':
-    runApi()
+    runApi(program.clearIndex)
     break
   default:
     throw new Error('Invalid --project property')

@@ -21,8 +21,12 @@
     "commander": "^2.19.0",
     "dotenv": "^6.1.0",
     "esm": "^3.0.84",
-    "file-system": "^2.2.2",
+    "fs-extra": "^7.0.0",
+    "human-size": "^1.1.0",
+    "ora": "^3.0.0",
     "request": "^2.88.0",
-    "request-promise": "^4.2.2"
+    "request-promise": "^4.2.2",
+    "s3": "^4.4.0",
+    "semver": "^5.6.0"
   }
 }
