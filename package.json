@@ -15,14 +15,14 @@
   },
   "homepage": "https://github.com/ember-learn/algolia-index-update-scripts#readme",
   "dependencies": {
-    "algoliasearch": "^3.24.5",
-    "bluebird": "^3.5.1",
-    "chalk": "^2.2.0",
-    "commander": "^2.17.1",
-    "dotenv": "^4.0.0",
+    "algoliasearch": "^3.30.0",
+    "bluebird": "^3.5.2",
+    "chalk": "^2.4.1",
+    "commander": "^2.19.0",
+    "dotenv": "^6.1.0",
     "esm": "^3.0.84",
     "file-system": "^2.2.2",
-    "request": "^2.83.0",
+    "request": "^2.88.0",
     "request-promise": "^4.2.2"
   }
 }
