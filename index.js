@@ -13,6 +13,7 @@ program
     '-c, --clear-index',
     'Whether indexes of the project should be cleared while processing'
   )
+  .option('-j, --json-driver', 'Use the json driver instead of algolia')
 
 program.on('--help', function() {
   console.log(`
@@ -26,10 +27,10 @@ program.parse(process.argv)
 
 switch (program.project) {
   case 'guides':
-    runGuides()
+    runGuides(program.clearIndex, program.jsonDriver)
     break
   case 'api':
-    runApi(program.clearIndex)
+    runApi(program.clearIndex, program.jsonDriver)
     break
   default:
     throw new Error('Invalid --project property')
