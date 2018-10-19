@@ -4,17 +4,14 @@
  * @returns {Object}            - Transformed object
  */
 export default function moduleSchema(module) {
-    const data = module.data;
-    const attributes = data.attributes;
+  const data = module.data
+  const attributes = data.attributes
 
-    return {
-        id: data.id,
-        name: attributes.name,
-        submodules: attributes.submodules,
-        namespaces: attributes.namespaces,
-        _tags: [
-            `module:${attributes.name}`,
-            `version:${attributes.version}`
-        ]
-    };
+  return {
+    id: data.id,
+    name: attributes.name,
+    submodules: attributes.submodules,
+    namespaces: attributes.namespaces,
+    _tags: [`module:${attributes.name}`, `version:${attributes.version}`]
+  }
 }

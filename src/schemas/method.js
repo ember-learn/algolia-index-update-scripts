@@ -4,27 +4,27 @@
  * @returns {Object}            - Transformed object
  */
 export default function methodSchema(method) {
-    return {
-        file: method.file,
-        line: method.line,
+  return {
+    file: method.file,
+    line: method.line,
 
-        module: method.module,
-        class: method.class,
-        name: method.name,
+    module: method.module,
+    class: method.class,
+    name: method.name,
 
-        static: method.static,
-        access: method.access,
+    static: method.static,
+    access: method.access,
 
-        _tags: [
-            `module:${method.module}`,
-            `version:${method.version}`,
-            `since:${method.since}`
-        ],
+    _tags: [
+      `module:${method.module}`,
+      `version:${method.version}`,
+      `since:${method.since}`
+    ],
 
-        hierarchy: {
-            lvl0: method.module,
-            lvl1: method.class,
-            lvl2: method.name
-        }
+    hierarchy: {
+      lvl0: method.module,
+      lvl1: method.class,
+      lvl2: method.name
     }
+  }
 }

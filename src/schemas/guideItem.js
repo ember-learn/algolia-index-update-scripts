@@ -6,24 +6,21 @@
  * @returns {Object}
  */
 export default function guideItemSchema(version, parent, item) {
-    // console.log('item', item);
-    const skipTocTag = item['skip-toc']? `skipTOC:true` : `skipTOC:false`;
+  // console.log('item', item);
+  const skipTocTag = item['skip-toc'] ? `skipTOC:true` : `skipTOC:false`
 
-    return {
-        title: item.title,
-        id: item.id,
-        url: item.url,
-        content: item.attributes.content,
-        description: item.attributes.description,
+  return {
+    title: item.title,
+    id: item.id,
+    url: item.url,
+    content: item.attributes.content,
+    description: item.attributes.description,
 
-        _tags: [
-            `version:${version}`,
-            skipTocTag
-        ],
+    _tags: [`version:${version}`, skipTocTag],
 
-        hierarchy: {
-            lvl0: parent.title,
-            lvl1: item.title
-        }
-    };
+    hierarchy: {
+      lvl0: parent.title,
+      lvl1: item.title
+    }
+  }
 }

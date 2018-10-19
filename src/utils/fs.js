@@ -1,8 +1,8 @@
-require('dotenv').config();
-import fs from 'fs';
-import Bluebird from 'bluebird';
+require('dotenv').config()
+import fs from 'fs'
+import Bluebird from 'bluebird'
 
-const { GUIDES_DOCS_PATH, API_DOCS_PATH } = process.env;
+const { GUIDES_DOCS_PATH, API_DOCS_PATH } = process.env
 
 /**
  * Returns the correct root path to the content of the project requested
@@ -11,12 +11,12 @@ const { GUIDES_DOCS_PATH, API_DOCS_PATH } = process.env;
  * @returns {string}    - Path to the project
  */
 export function getProjectFolderPath(projectType) {
-    const isCorrectType = ['guides','api'].includes(projectType);
-    const folderPaths = { guides: GUIDES_DOCS_PATH, api: API_DOCS_PATH };
+  const isCorrectType = ['guides', 'api'].includes(projectType)
+  const folderPaths = { guides: GUIDES_DOCS_PATH, api: API_DOCS_PATH }
 
-    if(!isCorrectType) throw new Error('Incorrect projectType');
+  if (!isCorrectType) throw new Error('Incorrect projectType')
 
-    return folderPaths[projectType];
+  return folderPaths[projectType]
 }
 
 /**
@@ -28,10 +28,10 @@ export function getProjectFolderPath(projectType) {
  * @returns {Promise}
  */
 export function readTmpFile(projectType, fileName) {
-    const folderPath = getProjectFolderPath(projectType);
-    const fileContents = fs.readFileSync(`${folderPath}/${fileName}`);
+  const folderPath = getProjectFolderPath(projectType)
+  const fileContents = fs.readFileSync(`${folderPath}/${fileName}`)
 
-    return JSON.parse(fileContents);
+  return JSON.parse(fileContents)
 }
 
 /**
@@ -43,29 +43,29 @@ export function readTmpFile(projectType, fileName) {
  * @returns {Promise}
  */
 export function readTmpFileAsync(projectType, fileName) {
-    const readFileAsync = Bluebird.promisify(fs.readFile);
-    const folderPath = getProjectFolderPath(projectType);
-    const filePath = `${folderPath}/${fileName}`;
+  const readFileAsync = Bluebird.promisify(fs.readFile)
+  const folderPath = getProjectFolderPath(projectType)
+  const filePath = `${folderPath}/${fileName}`
 
-    return readFileAsync(filePath).then(JSON.parse);
+  return readFileAsync(filePath).then(JSON.parse)
 }
 
 export function readTmpFileFactory(projectType) {
-    return function (fileName) {
-        return readTmpFile(projectType, fileName);
-    }
+  return function(fileName) {
+    return readTmpFile(projectType, fileName)
+  }
 }
 
 export function readTmpFileAsyncFactory(projectType) {
-    return function (fileName) {
-        return readTmpFileAsync(projectType, fileName);
-    }
+  return function(fileName) {
+    return readTmpFileAsync(projectType, fileName)
+  }
 }
 
 export default {
-    readTmpFile,
-    readTmpFileAsync,
+  readTmpFile,
+  readTmpFileAsync,
 
-    readTmpFileFactory,
-    readTmpFileAsyncFactory
-};
+  readTmpFileFactory,
+  readTmpFileAsyncFactory
+}
