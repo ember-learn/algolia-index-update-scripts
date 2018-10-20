@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "echo '🦄'"
+    "test": "echo '🦄'",
+	"greet": "echo '👋 Howdy'"
   },
   "repository": "git+https://github.com/ember-learn/algolia-index-update-scripts.git",
   "author": "Ember Learning team & Contributors",
