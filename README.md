@@ -12,20 +12,11 @@
 
 Use any valid AWS tokens to setup the `AWS_ACCESS_KEY` & `AWS_SECRET_KEY` to download the json api docs.
 
-Once generated, use the following command to re-index algolia:
-`yarn start -p api`
-
-### Indexing Guides
-
-Guides json files are currently not stored somewhere, because they are built on demand using [broccoli-static-site-json](https://github.com/stonecircle/broccoli-static-site-json) in [guides-app](https://github.com/ember-learn/guides-app).
-To Generate the JSON files locally, clone [guides-app](https://github.com/ember-learn/guides-app), and run `ember build`.
-
-Once generated, use the following command to re-index algolia:
-`yarn start -p guides`
+Use the following command to re-index algolia:
+`yarn start`
 
 ## .env variables
 
-1. `GUIDES_DOCS_PATH` - The path to the root of the built documentation from [guides-app](https://github.com/ember-learn/guides-app)
-2. `ALGOLIA_APP_ID` - The Algolia application ID, found in "API Keys" section of the Algolia dashboard
-3. `ALGOLIA_ADMIN_KEY` - The Algolia admin key, found in "API Keys" section of the Algolia dashboard
-4. `AWS_ACCESS_KEY` & `AWS_SECRET_KEY` - Any valid AWS token that can be used to read our public json docs
+1. `ALGOLIA_APP_ID` - The Algolia application ID, found in "API Keys" section of the Algolia dashboard
+2. `ALGOLIA_ADMIN_KEY` - The Algolia admin key, found in "API Keys" section of the Algolia dashboard
+3. `AWS_ACCESS_KEY` & `AWS_SECRET_KEY` - Any valid AWS token that can be used to read our public json docs
