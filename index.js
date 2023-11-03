@@ -1,12 +1,8 @@
-require = require('esm')(module)
-const program = require('commander')
+import program from 'commander';
 
-const { version, description } = require('./package.json')
-const { runApi } = require('./lib/api')
+import { runApi } from './lib/api.js'
 
 program
-  .version(version, '-v, --version')
-  .description(description)
   .option(
     '-c, --clear-index',
     'Whether indexes of the project should be cleared while processing'
@@ -16,9 +12,9 @@ program
 program.on('--help', function() {
   console.log(`
     Examples:
-        $ yarn start
-        $ yarn start -j # to write to fs
-        $ yarn start -c # Clear indexes before populating content
+        $ npm start
+        $ npm start -- -j # to write to fs
+        $ npm start -- -c # Clear indexes before populating content
     `)
 })
 
