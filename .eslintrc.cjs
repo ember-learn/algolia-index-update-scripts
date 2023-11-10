@@ -7,11 +7,7 @@ module.exports = {
     sourceType: 'module',
     requireConfigFile: false,
   },
-  extends: [
-    'eslint:recommended',
-    'plugin:n/recommended',
-    'plugin:prettier/recommended',
-  ],
+  extends: ['eslint:recommended', 'plugin:n/recommended', 'plugin:prettier/recommended'],
   env: {
     node: true,
     browser: false,
