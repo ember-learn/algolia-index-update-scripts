@@ -4,7 +4,9 @@
   "description": "This project reindexes algolia with the latest API & Guides documentation.",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "repository": "git+https://github.com/ember-learn/algolia-index-update-scripts.git",
   "author": "Ember Learning team & Contributors",
@@ -23,5 +25,12 @@
     "lodash-es": "^4.17.11",
     "ora": "^3.0.0",
     "semver": "^5.6.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.53.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-n": "^16.3.1",
+    "eslint-plugin-prettier": "^5.0.1",
+    "prettier": "^3.0.3"
   }
 }
